@@ -1,0 +1,22 @@
+package usecases
+
+import "skeleton/domain"
+
+//go:generate mockgen -destination=./mocks/mocks.go -package=mocks skeleton/usecases Usecases
+
+type Usecases interface {
+	// Adds a person by their name to the database and returns the new ID
+	AddPersonCase(name string) (string, error)
+	// Gets a person from the database by their ID
+	GetPersonCase(id string) (*domain.Person, error)
+}
+
+type UsecaseHandler struct {
+	peopleRepository People
+}
+
+func NewUsecasesHandler(peopleRepository People) UsecaseHandler {
+	return UsecaseHandler{
+		peopleRepository: peopleRepository,
+	}
+}
