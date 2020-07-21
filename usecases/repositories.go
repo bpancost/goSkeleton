@@ -1,6 +1,6 @@
 package usecases
 
-import "skeleton/domain"
+import "goSkeleton/domain"
 
 type People interface {
 	// Gets a person by their ID

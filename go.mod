@@ -1,4 +1,4 @@
-module skeleton
+module goSkeleton
 
 go 1.14
 

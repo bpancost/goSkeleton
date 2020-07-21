@@ -5,8 +5,8 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 
-	"skeleton/adapters/repository/person"
-	"skeleton/domain"
+	"goSkeleton/adapters/repository/person"
+	"goSkeleton/domain"
 )
 
 func TestPeople_AddPerson(t *testing.T) {

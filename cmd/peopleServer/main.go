@@ -1,7 +1,7 @@
 package main
 
 import (
-	"skeleton/app"
+	"goSkeleton/app"
 )
 
 func main() {

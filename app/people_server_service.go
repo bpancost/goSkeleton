@@ -10,8 +10,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 
-	"skeleton/adapters/rest"
-	"skeleton/usecases"
+	"goSkeleton/adapters/rest"
+	"goSkeleton/usecases"
 )
 
 type PeopleServerService struct {

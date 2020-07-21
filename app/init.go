@@ -5,9 +5,9 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"skeleton/adapters/repository/person"
-	"skeleton/adapters/rest"
-	"skeleton/usecases"
+	"goSkeleton/adapters/repository/person"
+	"goSkeleton/adapters/rest"
+	"goSkeleton/usecases"
 )
 
 func (service *PeopleServerService) init() {

@@ -1,8 +1,8 @@
 package usecases
 
-import "skeleton/domain"
+import "goSkeleton/domain"
 
-//go:generate mockgen -destination=./mocks/mocks.go -package=mocks skeleton/usecases Usecases
+//go:generate mockgen -destination=./mocks/mocks.go -package=mocks goSkeleton/usecases Usecases
 
 type Usecases interface {
 	// Adds a person by their name to the database and returns the new ID

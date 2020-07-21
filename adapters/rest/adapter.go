@@ -1,6 +1,6 @@
 package rest
 
-import "skeleton/usecases"
+import "goSkeleton/usecases"
 
 type Adapter struct {
 	Usecases usecases.Usecases

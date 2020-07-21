@@ -3,7 +3,7 @@ package usecases
 import (
 	"github.com/pkg/errors"
 
-	"skeleton/domain"
+	"goSkeleton/domain"
 )
 
 func (handler UsecaseHandler) GetPersonCase(id string) (*domain.Person, error) {

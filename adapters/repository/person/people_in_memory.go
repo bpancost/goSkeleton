@@ -3,7 +3,7 @@ package person
 import (
 	"github.com/pkg/errors"
 	"github.com/satori/go.uuid"
-	"skeleton/domain"
+	"goSkeleton/domain"
 )
 
 type People struct {
