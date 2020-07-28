@@ -6,3 +6,12 @@ server:
     write: 15
     read: 15
     idle: 60
+  endpoints:
+    - name: "GetPerson"
+      method: "GET"
+      path: "/person/{id}"
+      handler: "GetPerson"
+    - name: "AddPerson"
+      method: "POST"
+      path: "/person"
+      handler: "AddPerson"

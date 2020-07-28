@@ -11,6 +11,9 @@ type ViperConfig struct {
 	config *viper.Viper
 }
 
+// Creates a new configuration loader using the Viper loader.
+// The configuration is loaded from a file named "config" in yaml format in the cmd folder matching the given project name.
+// Environment variables are loaded with precedence and must be prefixed by the project name in snake case (all caps).
 func NewViperConfig(projectName string) (Config, error) {
 	config := viper.New()
 	config.SetConfigName("config")
@@ -58,6 +61,14 @@ func (c *ViperConfig) GetTime(key string) time.Time {
 
 func (c *ViperConfig) GetDuration(key string) time.Duration {
 	return c.config.GetDuration(key)
+}
+
+func (c *ViperConfig) GetStringMapString(key string) map[string]string {
+	return c.config.GetStringMapString(key)
+}
+
+func (c *ViperConfig) Get(key string) interface{} {
+	return c.config.Get(key)
 }
 
 var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")

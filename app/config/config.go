@@ -20,4 +20,8 @@ type Config interface {
 	GetTime(key string) time.Time
 	// Get a duration value from the config using the given key
 	GetDuration(key string) time.Duration
+	// Get a map of strings keys to string values from the config using the given key
+	GetStringMapString(key string) map[string]string
+	// Get a value without type information from the config using the given key
+	Get(key string) interface{}
 }

@@ -1,6 +1,8 @@
 package app
 
 import (
+	"github.com/sirupsen/logrus"
+	"goSkeleton/app/config"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -10,34 +12,41 @@ import (
 	"goSkeleton/usecases"
 )
 
-func (service *PeopleServerService) init() {
+func (service *PeopleServerService) init(config config.Config) {
 	service.PeopleRepository = person.NewPeopleInMemory()
 	service.Usecases = usecases.NewUsecasesHandler(service.PeopleRepository)
 	service.RestAdapter = rest.NewAdapter(service.Usecases)
-	routes := []Route{
-		{
-			Name:    "GetPerson",
-			Method:  "GET",
-			Path:    "/person/{id}",
-			Handler: service.RestAdapter.GetPerson,
-		},
-		{
-			Name:    "AddPerson",
-			Method:  "POST",
-			Path:    "/person",
-			Handler: service.RestAdapter.AddPerson,
-		},
+
+	endpoints := config.Get("server.endpoints")
+	var routes []Route
+	if endpoints, ok := endpoints.([]interface{}); ok {
+		routes = make([]Route, len(endpoints))
+		for index, endpointRaw := range endpoints {
+			if endpoint, ok := endpointRaw.(map[interface{}]interface{}); ok {
+				handler, err := service.RestAdapter.GetHandler(rest.AdapterName(endpoint["handler"].(string)))
+				if err != nil {
+					logrus.Panic(err)
+				}
+				routes[index] = Route{
+					Name:    endpoint["name"].(string),
+					Method:  endpoint["method"].(string),
+					Path:    endpoint["path"].(string),
+					Handler: handler,
+				}
+			} else {
+				logrus.Panic("server.endpoints configuration has no objects in the list")
+			}
+		}
+	} else {
+		logrus.Panic("server.endpoints configuration is not a list")
 	}
 	service.Router = initRouter(routes)
 }
 
 type Route struct {
-	Name   string
-	Method string
-	Path   string
-	//TODO: This should be string/enum reference that is mapped to a handler function, not the handler function itself
-	// This would allow us to put the handler as a name in a config file or environment variable and make all this
-	// configurable
+	Name    string
+	Method  string
+	Path    string
 	Handler http.HandlerFunc
 }
 

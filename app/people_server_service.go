@@ -33,7 +33,7 @@ func (service *PeopleServerService) Start() {
 		logrus.Panic(err)
 	}
 
-	service.init()
+	service.init(conf)
 
 	address := conf.GetString("server.address.ip") + ":" + conf.GetString("server.address.port")
 	service.Server = &http.Server{
