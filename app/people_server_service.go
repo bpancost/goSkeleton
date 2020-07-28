@@ -2,7 +2,7 @@ package app
 
 import (
 	"context"
-	"github.com/spf13/viper"
+	"goSkeleton/app/config"
 	"net/http"
 	"os"
 	"os/signal"
@@ -28,23 +28,19 @@ func NewPeopleServerService() PeopleServerService {
 }
 
 func (service *PeopleServerService) Start() {
-	service.init()
-
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath("./cmd/peopleServer")
-	viper.AddConfigPath(".")
-	err := viper.ReadInConfig()
+	conf, err := config.NewViperConfig("peopleServer")
 	if err != nil {
 		logrus.Panic(err)
 	}
 
-	address := viper.GetString("server.address.ip") + ":" + viper.GetString("server.address.port")
+	service.init()
+
+	address := conf.GetString("server.address.ip") + ":" + conf.GetString("server.address.port")
 	service.Server = &http.Server{
 		Addr:         address,
-		WriteTimeout: time.Second * viper.GetDuration("server.timeout.write"),
-		ReadTimeout:  time.Second * viper.GetDuration("server.timeout.read"),
-		IdleTimeout:  time.Second * viper.GetDuration("server.timeout.idle"),
+		WriteTimeout: time.Second * conf.GetDuration("server.timeout.write"),
+		ReadTimeout:  time.Second * conf.GetDuration("server.timeout.read"),
+		IdleTimeout:  time.Second * conf.GetDuration("server.timeout.idle"),
 		Handler:      service.Router,
 	}
 	logrus.Infof("starting server on: %s", address)
