@@ -1,0 +1,8 @@
+server:
+  address:
+    ip: "0.0.0.0"
+    port: 8080
+  timeout:
+    write: 15
+    read: 15
+    idle: 60
