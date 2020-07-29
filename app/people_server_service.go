@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"goSkeleton/adapters/rest"
-	"goSkeleton/app/config"
+	"goSkeleton/internal/config"
 	"goSkeleton/internal/logging"
 	"goSkeleton/usecases"
 )

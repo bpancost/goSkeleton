@@ -7,7 +7,7 @@ import (
 
 	"goSkeleton/adapters/repository/person"
 	"goSkeleton/adapters/rest"
-	"goSkeleton/app/config"
+	"goSkeleton/internal/config"
 	"goSkeleton/internal/logging"
 	"goSkeleton/usecases"
 )
