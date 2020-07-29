@@ -1,14 +1,14 @@
 package app
 
 import (
-	"github.com/sirupsen/logrus"
-	"goSkeleton/app/config"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
 	"goSkeleton/adapters/repository/person"
 	"goSkeleton/adapters/rest"
+	"goSkeleton/app/config"
+	"goSkeleton/internal/logging"
 	"goSkeleton/usecases"
 )
 
@@ -25,7 +25,7 @@ func (service *PeopleServerService) init(config config.Config) {
 			if endpoint, ok := endpointRaw.(map[interface{}]interface{}); ok {
 				handler, err := service.RestAdapter.GetHandler(rest.AdapterName(endpoint["handler"].(string)))
 				if err != nil {
-					logrus.Panic(err)
+					logging.Panic(err)
 				}
 				routes[index] = Route{
 					Name:    endpoint["name"].(string),
@@ -34,11 +34,11 @@ func (service *PeopleServerService) init(config config.Config) {
 					Handler: handler,
 				}
 			} else {
-				logrus.Panic("server.endpoints configuration has no objects in the list")
+				logging.Panic("server.endpoints configuration has no objects in the list")
 			}
 		}
 	} else {
-		logrus.Panic("server.endpoints configuration is not a list")
+		logging.Panic("server.endpoints configuration is not a list")
 	}
 	service.Router = initRouter(routes)
 }

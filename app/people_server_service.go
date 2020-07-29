@@ -2,16 +2,16 @@ package app
 
 import (
 	"context"
-	"goSkeleton/app/config"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
 
 	"goSkeleton/adapters/rest"
+	"goSkeleton/app/config"
+	"goSkeleton/internal/logging"
 	"goSkeleton/usecases"
 )
 
@@ -28,9 +28,15 @@ func NewPeopleServerService() PeopleServerService {
 }
 
 func (service *PeopleServerService) Start() {
+	hostname, err := os.Hostname()
+	if err != nil {
+		logging.Panic(err)
+	}
+	logging.GetLoggerWithBaseFields("peopleServer", hostname)
+
 	conf, err := config.NewViperConfig("peopleServer")
 	if err != nil {
-		logrus.Panic(err)
+		logging.Panic(err)
 	}
 
 	service.init(conf)
@@ -43,10 +49,10 @@ func (service *PeopleServerService) Start() {
 		IdleTimeout:  time.Second * conf.GetDuration("server.timeout.idle"),
 		Handler:      service.Router,
 	}
-	logrus.Infof("starting server on: %s", address)
+	logging.Infof("starting server on: %s", address)
 	go func() {
 		if err := service.Server.ListenAndServe(); err != nil {
-			logrus.Error(err)
+			logging.Error(err)
 		}
 	}()
 
@@ -55,7 +61,7 @@ func (service *PeopleServerService) Start() {
 
 	<-done
 
-	logrus.Info("shutting down")
+	logging.Info("shutting down")
 	service.Shutdown()
 }
 
@@ -64,9 +70,9 @@ func (service *PeopleServerService) Shutdown() {
 	defer cancel()
 
 	if err := service.Server.Shutdown(ctx); err != nil {
-		logrus.Error(err)
+		logging.Error(err)
 	}
 	if err := service.PeopleRepository.Close(); err != nil {
-		logrus.Error(err)
+		logging.Error(err)
 	}
 }

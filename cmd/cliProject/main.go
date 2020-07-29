@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
+	"goSkeleton/internal/logging"
 	"os"
 )
 
@@ -11,13 +11,13 @@ func main() {
 		Name:  "cliProject",
 		Usage: "This is a sample CLI project.",
 		Action: func(c *cli.Context) error {
-			logrus.Info("Hello World")
+			logging.Info("Hello World")
 			return nil
 		},
 	}
 
 	err := app.Run(os.Args)
 	if err != nil {
-		logrus.Fatal(err)
+		logging.Fatal(err)
 	}
 }

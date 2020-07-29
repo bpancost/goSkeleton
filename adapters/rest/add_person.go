@@ -2,8 +2,9 @@ package rest
 
 import (
 	"encoding/json"
-	"github.com/sirupsen/logrus"
 	"net/http"
+
+	"goSkeleton/internal/logging"
 )
 
 type AddPersonRequest struct {
@@ -18,13 +19,13 @@ func (adapter Adapter) AddPerson(w http.ResponseWriter, req *http.Request) {
 	var jsonRequest AddPersonRequest
 	err := json.NewDecoder(req.Body).Decode(&jsonRequest)
 	if err != nil {
-		logrus.Errorf("failed to decode JSON: %v", err)
+		logging.Errorf("failed to decode JSON: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	id, err := adapter.Usecases.AddPersonCase(jsonRequest.Name)
 	if err != nil {
-		logrus.Errorf("failed to add person: %v", err)
+		logging.Errorf("failed to add person: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -32,7 +33,7 @@ func (adapter Adapter) AddPerson(w http.ResponseWriter, req *http.Request) {
 	response := AddPersonResponse{ID: id}
 	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
-		logrus.Errorf("failed to encode response: %v", err)
+		logging.Errorf("failed to encode response: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
