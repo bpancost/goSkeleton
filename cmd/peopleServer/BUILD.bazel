@@ -1,4 +1,5 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push", "container_image")
 
 go_library(
     name = "go_default_library",
@@ -12,4 +13,10 @@ go_binary(
     name = "peopleServer",
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
+)
+
+container_image(
+    name = "peopleServerImage",
+    base = "@go_base//image",
+    files = [":peopleServer"],
 )
