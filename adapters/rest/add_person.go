@@ -16,6 +16,7 @@ type AddPersonResponse struct {
 }
 
 func (adapter Adapter) AddPerson(w http.ResponseWriter, req *http.Request) {
+	logger := logging.GetRequestLogger(req)
 	var jsonRequest AddPersonRequest
 	err := json.NewDecoder(req.Body).Decode(&jsonRequest)
 	if err != nil {
@@ -25,7 +26,7 @@ func (adapter Adapter) AddPerson(w http.ResponseWriter, req *http.Request) {
 	}
 	id, err := adapter.Usecases.AddPersonCase(jsonRequest.Name)
 	if err != nil {
-		logging.Errorf("failed to add person: %v", err)
+		logger.Errorf("failed to add person: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -33,7 +34,7 @@ func (adapter Adapter) AddPerson(w http.ResponseWriter, req *http.Request) {
 	response := AddPersonResponse{ID: id}
 	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
-		logging.Errorf("failed to encode response: %v", err)
+		logger.Errorf("failed to encode response: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

@@ -1,6 +1,10 @@
 package logging
 
+import "net/http"
+
 type Logger interface {
+	AddRequestLogger(req *http.Request) *http.Request
+	GetRequestLogger(req *http.Request) Logger
 	Trace(args ...interface{})
 	Tracef(format string, args ...interface{})
 	Debug(args ...interface{})

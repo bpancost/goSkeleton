@@ -1,7 +1,9 @@
 package logging
 
 import (
+	"context"
 	"github.com/sirupsen/logrus"
+	"net/http"
 	"sync"
 )
 
@@ -126,4 +128,27 @@ func Panicf(format string, args ...interface{}) {
 }
 func (log *LogrusLogger) Panicf(format string, args ...interface{}) {
 	log.logger.Panicf(format, args)
+}
+
+func AddRequestLogger(req *http.Request) *http.Request {
+	return log.AddRequestLogger(req)
+}
+func (log *LogrusLogger) AddRequestLogger(req *http.Request) *http.Request {
+	fields := logrus.Fields{
+		"host":        req.Host,
+		"method":      req.Method,
+		"request_uri": req.RequestURI,
+		"protocol":    req.Proto,
+		"remote_addr": req.RemoteAddr,
+	}
+	return req.WithContext(context.WithValue(req.Context(), "logger", &LogrusLogger{
+		logger: log.logger.WithFields(fields),
+	}))
+}
+
+func GetRequestLogger(req *http.Request) Logger {
+	return log.GetRequestLogger(req)
+}
+func (log *LogrusLogger) GetRequestLogger(req *http.Request) Logger {
+	return req.Context().Value("logger").(Logger)
 }

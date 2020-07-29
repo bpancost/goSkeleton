@@ -41,6 +41,7 @@ func (service *PeopleServerService) init(config config.Config) {
 		logging.Panic("server.endpoints configuration is not a list")
 	}
 	service.Router = initRouter(routes)
+	service.Router.Use(loggingMiddleware)
 }
 
 type Route struct {
@@ -56,4 +57,10 @@ func initRouter(routes []Route) *mux.Router {
 		router.Name(route.Name).Methods(route.Method).Path(route.Path).HandlerFunc(route.Handler)
 	}
 	return router
+}
+
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		next.ServeHTTP(w, logging.AddRequestLogger(req))
+	})
 }
