@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "adapter.go",
+        "adapter_registry.go",
+        "add_person.go",
+        "get_person.go",
+    ],
+    importpath = "goSkeleton/adapters/rest",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/logging:go_default_library",
+        "//usecases:go_default_library",
+        "@com_github_gorilla_mux//:go_default_library",
+        "@com_github_pkg_errors//:go_default_library",
+    ],
+)
