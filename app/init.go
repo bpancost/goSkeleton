@@ -17,7 +17,10 @@ func (service *PeopleServerService) init(config config.Config) {
 	service.Usecases = usecases.NewUsecasesHandler(service.PeopleRepository)
 	service.RestAdapter = rest.NewAdapter(service.Usecases)
 
-	endpoints := config.GetListOfMaps("server.endpoints")
+	endpoints, err := config.GetListOfMaps("server.endpoints")
+	if err != nil {
+		logging.Panic(err)
+	}
 	router := mux.NewRouter()
 	for _, endpoint := range endpoints {
 		handler, err := service.RestAdapter.GetHandler(rest.AdapterName(endpoint["handler"]))

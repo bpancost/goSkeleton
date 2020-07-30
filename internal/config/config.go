@@ -25,5 +25,5 @@ type Config interface {
 	// Get a value without type information from the config using the given key
 	Get(key string) interface{}
 	// Gets a list of objects which each are translated to a map of string key to string value
-	GetListOfMaps(key string) []map[string]string
+	GetListOfMaps(key string) ([]map[string]string, error)
 }

@@ -71,7 +71,7 @@ func (c *ViperConfig) Get(key string) interface{} {
 	return c.config.Get(key)
 }
 
-func (c *ViperConfig) GetListOfMaps(key string) []map[string]string {
+func (c *ViperConfig) GetListOfMaps(key string) ([]map[string]string, error) {
 	finalValues := make([]map[string]string, 0)
 	rawValue := c.config.Get(key)
 	if listValues, ok := rawValue.([]interface{}); ok {
@@ -91,11 +91,9 @@ func (c *ViperConfig) GetListOfMaps(key string) []map[string]string {
 		}
 	} else if stringValue, ok := rawValue.(string); ok {
 		err := json.Unmarshal([]byte(stringValue), &finalValues)
-		if err != nil {
-			finalValues = make([]map[string]string, 0)
-		}
+		return finalValues, err
 	}
-	return finalValues
+	return finalValues, nil
 }
 
 var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
