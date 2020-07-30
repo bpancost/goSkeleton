@@ -8,7 +8,7 @@ import (
 
 func main() {
 	app := &cli.App{
-		Name:  "cliProject",
+		Name:  "cli_project",
 		Usage: "This is a sample CLI project.",
 		Action: func(c *cli.Context) error {
 			logging.Info("Hello World")

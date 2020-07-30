@@ -14,7 +14,7 @@
     </EXTENSION>
     <kind value="PACKAGE" />
     <filePath value="$PROJECT_DIR$/cmd/cliProject/main.go" />
-    <package value="goSkeleton/cmd/cliProject" />
+    <package value="goSkeleton/cmd/cli_project" />
     <directory value="$PROJECT_DIR$/" />
     <method v="2" />
   </configuration>
