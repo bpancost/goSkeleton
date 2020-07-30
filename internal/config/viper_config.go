@@ -18,17 +18,15 @@ func NewViperConfig(projectName string) (Config, error) {
 	config := viper.New()
 	config.SetConfigName("config")
 	config.SetConfigType("yaml")
-	config.AddConfigPath("./cmd/" + projectName)
-	config.AddConfigPath(".")
+	config.AddConfigPath("./cmd/" + projectName) // running locally
+	config.AddConfigPath(".")                    // running locally
+	config.AddConfigPath("./bin/")               // running the dev container image
 	config.SetEnvPrefix(toSnakeCase(projectName))
 	config.AutomaticEnv()
 	err := config.ReadInConfig()
-	if err != nil {
-		return nil, err
-	}
 	return &ViperConfig{
 		config: config,
-	}, nil
+	}, err
 }
 
 func (c *ViperConfig) GetBoolean(key string) bool {

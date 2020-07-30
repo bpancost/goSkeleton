@@ -36,7 +36,7 @@ func (service *PeopleServerService) Start() {
 
 	conf, err := config.NewViperConfig("people_server")
 	if err != nil {
-		logging.Panic(err)
+		logging.Warn(err)
 	}
 
 	service.init(conf)
