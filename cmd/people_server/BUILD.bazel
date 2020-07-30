@@ -15,8 +15,14 @@ go_binary(
     visibility = ["//visibility:public"],
 )
 
+filegroup(
+    name = "dev_config",
+    srcs = ["config.yml"],
+)
+
 container_image(
     name = "image",
     base = "@go_base//image",
-    files = [":people_server"],
+    entrypoint = ["/people_server"],
+    files = [":people_server", ":dev_config"],
 )
