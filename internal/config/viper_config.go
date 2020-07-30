@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/json"
 	"github.com/spf13/viper"
 	"regexp"
 	"strings"
@@ -22,6 +23,7 @@ func NewViperConfig(projectName string) (Config, error) {
 	config.AddConfigPath(".")                    // running locally
 	config.AddConfigPath("./bin/")               // running the dev container image
 	config.SetEnvPrefix(toSnakeCase(projectName))
+	config.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	config.AutomaticEnv()
 	err := config.ReadInConfig()
 	return &ViperConfig{
@@ -67,6 +69,33 @@ func (c *ViperConfig) GetStringMapString(key string) map[string]string {
 
 func (c *ViperConfig) Get(key string) interface{} {
 	return c.config.Get(key)
+}
+
+func (c *ViperConfig) GetListOfMaps(key string) []map[string]string {
+	finalValues := make([]map[string]string, 0)
+	rawValue := c.config.Get(key)
+	if listValues, ok := rawValue.([]interface{}); ok {
+		finalValues = make([]map[string]string, len(listValues))
+		for index, objectRaw := range listValues {
+			if objectMap, ok := objectRaw.(map[interface{}]interface{}); ok {
+				stringMap := make(map[string]string)
+				for key, value := range objectMap {
+					keyString, okKey := key.(string)
+					keyValue, okValue := value.(string)
+					if okKey && okValue {
+						stringMap[keyString] = keyValue
+					}
+				}
+				finalValues[index] = stringMap
+			}
+		}
+	} else if stringValue, ok := rawValue.(string); ok {
+		err := json.Unmarshal([]byte(stringValue), &finalValues)
+		if err != nil {
+			finalValues = make([]map[string]string, 0)
+		}
+	}
+	return finalValues
 }
 
 var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
