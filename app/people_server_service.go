@@ -32,11 +32,11 @@ func (service *PeopleServerService) Start() {
 	if err != nil {
 		logging.Panic(err)
 	}
-	logging.GetLoggerWithBaseFields("peopleServer", hostname)
+	logging.GetLoggerWithBaseFields("people_server", hostname)
 
-	conf, err := config.NewViperConfig("peopleServer")
+	conf, err := config.NewViperConfig("people_server")
 	if err != nil {
-		logging.Panic(err)
+		logging.Warn(err)
 	}
 
 	service.init(conf)

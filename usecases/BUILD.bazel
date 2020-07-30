@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "add_person.go",
+        "get_person.go",
+        "interface.go",
+        "repositories.go",
+    ],
+    importpath = "goSkeleton/usecases",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//domain:go_default_library",
+        "@com_github_pkg_errors//:go_default_library",
+    ],
+)

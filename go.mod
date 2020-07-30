@@ -3,6 +3,7 @@ module goSkeleton
 go 1.14
 
 require (
+	github.com/bazelbuild/bazel-gazelle v0.21.1 // indirect
 	github.com/golang/mock v1.4.3
 	github.com/gorilla/mux v1.7.4
 	github.com/pkg/errors v0.9.1

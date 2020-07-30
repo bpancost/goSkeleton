@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["people_in_memory.go"],
+    importpath = "goSkeleton/adapters/repository/person",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//domain:go_default_library",
+        "@com_github_pkg_errors//:go_default_library",
+        "@com_github_satori_go_uuid//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["people_in_memory_test.go"],
+    embed = [":go_default_library"],
+    deps = [
+        "//domain:go_default_library",
+        "@com_github_smartystreets_goconvey//convey:go_default_library",
+    ],
+)
