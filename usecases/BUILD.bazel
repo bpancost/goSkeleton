@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "go_default_library",
@@ -13,5 +13,19 @@ go_library(
     deps = [
         "//domain:go_default_library",
         "@com_github_pkg_errors//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "add_person_test.go",
+        "get_person_test.go",
+    ],
+    embed = [":go_default_library"],
+    deps = [
+        "//adapters/repository/person:go_default_library",
+        "//domain:go_default_library",
+        "@com_github_smartystreets_goconvey//convey:go_default_library",
     ],
 )
