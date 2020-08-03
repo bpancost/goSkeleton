@@ -12,4 +12,5 @@ require (
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/spf13/viper v1.7.0
 	github.com/urfave/cli v1.22.4
+	google.golang.org/grpc v1.31.0
 )

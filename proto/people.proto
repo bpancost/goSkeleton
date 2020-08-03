@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+message AddPersonRequest {
+    string name = 1;
+}
+
+message GetPersonRequest {
+    string id = 1;
+}
+
+message GetPersonResponse {
+    string id = 1;
+    string name = 2;
+}
+
+service People {
+    rpc GetPerson (AddPersonRequest) returns (google.protobuf.Empty);
+    rpc AddPerson (GetPersonRequest) returns (GetPersonResponse);
+}
