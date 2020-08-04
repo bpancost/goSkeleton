@@ -12,6 +12,10 @@ import (
 
 func (adapter Adapter) AddPerson(ctx context.Context, request *proto.AddPersonRequest) (*proto.AddPersonResponse, error) {
 	logger := logging.GetGrpcContextLogger(ctx)
+	if len(request.Name) == 0 {
+		logger.Error("received an empty request")
+		return &proto.AddPersonResponse{}, status.Errorf(codes.InvalidArgument, "name cannot be empty")
+	}
 	id, err := adapter.Usecases.AddPersonCase(request.Name)
 	if err != nil {
 		logger.Errorf("failed to add person: %v", err)
