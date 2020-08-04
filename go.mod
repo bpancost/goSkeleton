@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/bazelbuild/bazel-gazelle v0.21.1 // indirect
 	github.com/golang/mock v1.4.3
+	github.com/golang/protobuf v1.4.2
 	github.com/gorilla/mux v1.7.4
 	github.com/pkg/errors v0.9.1
 	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b
@@ -13,4 +14,6 @@ require (
 	github.com/spf13/viper v1.7.0
 	github.com/urfave/cli v1.22.4
 	google.golang.org/grpc v1.31.0
+	google.golang.org/protobuf v1.23.0
+	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 )

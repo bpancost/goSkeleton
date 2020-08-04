@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run People Server RESTful Service (Env Vars)" type="GoApplicationRunConfiguration" factoryName="Go Application">
+  <configuration default="false" name="Run People Server Service (Env Vars)" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="goSkeleton" />
     <working_directory value="$PROJECT_DIR$" />
     <envs>

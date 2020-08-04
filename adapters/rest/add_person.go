@@ -16,7 +16,7 @@ type AddPersonResponse struct {
 }
 
 func (adapter Adapter) AddPerson(w http.ResponseWriter, req *http.Request) {
-	logger := logging.GetRequestLogger(req)
+	logger := logging.GetRestRequestLogger(req)
 	var jsonRequest AddPersonRequest
 	err := json.NewDecoder(req.Body).Decode(&jsonRequest)
 	if err != nil {

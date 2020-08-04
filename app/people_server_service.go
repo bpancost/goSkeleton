@@ -2,6 +2,8 @@ package app
 
 import (
 	"context"
+	"goSkeleton/adapters/grpc"
+	"goSkeleton/adapters/repository/person"
 	"net/http"
 	"os"
 	"os/signal"
@@ -19,6 +21,7 @@ type PeopleServerService struct {
 	PeopleRepository usecases.People
 	Usecases         usecases.Usecases
 	RestAdapter      rest.Adapter
+	GrpcAdapter      grpc.Adapter
 	Router           *mux.Router
 	Server           *http.Server
 }
@@ -39,22 +42,11 @@ func (service *PeopleServerService) Start() {
 		logging.Warn(err)
 	}
 
-	service.init(conf)
+	service.PeopleRepository = person.NewPeopleInMemory()
+	service.Usecases = usecases.NewUsecasesHandler(service.PeopleRepository)
 
-	address := conf.GetString("server.address.ip") + ":" + conf.GetString("server.address.port")
-	service.Server = &http.Server{
-		Addr:         address,
-		WriteTimeout: time.Second * conf.GetDuration("server.timeout.write"),
-		ReadTimeout:  time.Second * conf.GetDuration("server.timeout.read"),
-		IdleTimeout:  time.Second * conf.GetDuration("server.timeout.idle"),
-		Handler:      service.Router,
-	}
-	logging.Infof("starting server on: %s", address)
-	go func() {
-		if err := service.Server.ListenAndServe(); err != nil {
-			logging.Error(err)
-		}
-	}()
+	service.initRest(conf)
+	service.initGrpc(conf)
 
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt)

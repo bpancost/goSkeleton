@@ -1,9 +1,15 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
+package proto;
+
+option go_package = "proto;proto";
 
 message AddPersonRequest {
     string name = 1;
+}
+
+message AddPersonResponse {
+    string id = 1;
 }
 
 message GetPersonRequest {
@@ -16,6 +22,6 @@ message GetPersonResponse {
 }
 
 service People {
-    rpc GetPerson (AddPersonRequest) returns (google.protobuf.Empty);
-    rpc AddPerson (GetPersonRequest) returns (GetPersonResponse);
+    rpc AddPerson (AddPersonRequest) returns (AddPersonResponse);
+    rpc GetPerson (GetPersonRequest) returns (GetPersonResponse);
 }

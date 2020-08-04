@@ -1,10 +1,15 @@
 package logging
 
-import "net/http"
+import (
+	"context"
+	"net/http"
+)
 
 type Logger interface {
-	AddRequestLogger(req *http.Request) *http.Request
-	GetRequestLogger(req *http.Request) Logger
+	AddRestRequestLogger(req *http.Request) *http.Request
+	GetRestRequestLogger(req *http.Request) Logger
+	AddGrpcContextLogger(ctx context.Context, fullMethod string) context.Context
+	GetGrpcContextLogger(ctx context.Context) Logger
 	Trace(args ...interface{})
 	Tracef(format string, args ...interface{})
 	Debug(args ...interface{})
