@@ -3,7 +3,9 @@ package logging
 import (
 	"context"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc/peer"
 	"net/http"
+	"path"
 	"sync"
 )
 
@@ -130,11 +132,12 @@ func (log *LogrusLogger) Panicf(format string, args ...interface{}) {
 	log.logger.Panicf(format, args)
 }
 
-func AddRequestLogger(req *http.Request) *http.Request {
-	return log.AddRequestLogger(req)
+func AddRestRequestLogger(req *http.Request) *http.Request {
+	return log.AddRestRequestLogger(req)
 }
-func (log *LogrusLogger) AddRequestLogger(req *http.Request) *http.Request {
+func (log *LogrusLogger) AddRestRequestLogger(req *http.Request) *http.Request {
 	fields := logrus.Fields{
+		"kind":        "REST",
 		"host":        req.Host,
 		"method":      req.Method,
 		"request_uri": req.RequestURI,
@@ -146,9 +149,36 @@ func (log *LogrusLogger) AddRequestLogger(req *http.Request) *http.Request {
 	}))
 }
 
-func GetRequestLogger(req *http.Request) Logger {
-	return log.GetRequestLogger(req)
+func GetRestRequestLogger(req *http.Request) Logger {
+	return log.GetRestRequestLogger(req)
 }
-func (log *LogrusLogger) GetRequestLogger(req *http.Request) Logger {
+func (log *LogrusLogger) GetRestRequestLogger(req *http.Request) Logger {
 	return req.Context().Value("logger").(Logger)
+}
+
+func AddGrpcContextLogger(ctx context.Context, fullMethod string) context.Context {
+	return log.AddGrpcContextLogger(ctx, fullMethod)
+}
+func (log *LogrusLogger) AddGrpcContextLogger(ctx context.Context, fullMethod string) context.Context {
+	service := path.Dir(fullMethod)[1:]
+	method := path.Base(fullMethod)
+	fields := logrus.Fields{
+		"kind":    "GRPC",
+		"service": service,
+		"method":  method,
+	}
+	if p, ok := peer.FromContext(ctx); ok {
+		fields["remote_addr"] = p.Addr.String()
+	}
+
+	return context.WithValue(ctx, "logger", &LogrusLogger{
+		logger: log.logger.WithFields(fields),
+	})
+}
+
+func GetGrpcContextLogger(ctx context.Context) Logger {
+	return log.GetGrpcContextLogger(ctx)
+}
+func (log *LogrusLogger) GetGrpcContextLogger(ctx context.Context) Logger {
+	return ctx.Value("logger").(Logger)
 }

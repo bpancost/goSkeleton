@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "proto;proto";
+
+message AddPersonRequest {
+    string name = 1;
+}
+
+message AddPersonResponse {
+    string id = 1;
+}
+
+message GetPersonRequest {
+    string id = 1;
+}
+
+message GetPersonResponse {
+    string id = 1;
+    string name = 2;
+}
+
+service People {
+    rpc AddPerson (AddPersonRequest) returns (AddPersonResponse);
+    rpc GetPerson (GetPersonRequest) returns (GetPersonResponse);
+}

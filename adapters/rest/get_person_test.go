@@ -29,7 +29,7 @@ func TestAdapter_GetPerson(t *testing.T) {
 		request = mux.SetURLVars(request, map[string]string{
 			"id": id,
 		})
-		request = logging.AddRequestLogger(request)
+		request = logging.AddRestRequestLogger(request)
 		response := httptest.NewRecorder()
 
 		Convey("And the person's ID can't be found, return an error", func() {

@@ -3,17 +3,22 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
-        "init.go",
+        "init_grpc.go",
+        "init_rest.go",
         "people_server_service.go",
     ],
     importpath = "goSkeleton/app",
     visibility = ["//visibility:public"],
     deps = [
+        "//adapters/grpc:go_default_library",
         "//adapters/repository/person:go_default_library",
         "//adapters/rest:go_default_library",
         "//internal/config:go_default_library",
         "//internal/logging:go_default_library",
+        "//proto:go_default_library",
         "//usecases:go_default_library",
         "@com_github_gorilla_mux//:go_default_library",
+        "@com_github_grpc_ecosystem_go_grpc_middleware//:go_default_library",
+        "@org_golang_google_grpc//:go_default_library",
     ],
 )

@@ -40,11 +40,12 @@ container_image(
     files = [":people_server"],
     ports = ["8080"],
     env = {
-        "PEOPLE_SERVER_SERVER_ADDRESS_IP": "0.0.0.0",
-        "PEOPLE_SERVER_SERVER_ADDRESS_PORT": "8080",
-        "PEOPLE_SERVER_SERVER_TIMEOUT_WRITE": "15",
-        "PEOPLE_SERVER_SERVER_TIMEOUT_READ": "15",
-        "PEOPLE_SERVER_SERVER_TIMEOUT_IDLE": "60",
-        "PEOPLE_SERVER_SERVER_ENDPOINTS": "[{\"name\": \"GetPerson\", \"method\": \"GET\", \"path\": \"/person/{id}\", \"handler\": \"GetPerson\"},{\"name\": \"AddPerson\", \"method\": \"POST\", \"path\": \"/person\", \"handler\": \"AddPerson\"}]",
+        "PEOPLE_SERVER_REST_ADDRESS_IP": "0.0.0.0",
+        "PEOPLE_SERVER_REST_ADDRESS_PORT": "8080",
+        "PEOPLE_SERVER_REST_TIMEOUT_WRITE": "15",
+        "PEOPLE_SERVER_REST_TIMEOUT_READ": "15",
+        "PEOPLE_SERVER_REST_TIMEOUT_IDLE": "60",
+        "PEOPLE_SERVER_REST_ENDPOINTS": "[{\"name\": \"GetPerson\", \"method\": \"GET\", \"path\": \"/person/{id}\", \"handler\": \"GetPerson\"},{\"name\": \"AddPerson\", \"method\": \"POST\", \"path\": \"/person\", \"handler\": \"AddPerson\"}]",
+        "PEOPLE_SERVER_GRPC_PORT": "50051",
     },
 )

@@ -9,7 +9,7 @@ import (
 )
 
 func (adapter Adapter) GetPerson(w http.ResponseWriter, req *http.Request) {
-	logger := logging.GetRequestLogger(req)
+	logger := logging.GetRestRequestLogger(req)
 	vars := mux.Vars(req)
 	id := vars["id"]
 	person, err := adapter.Usecases.GetPersonCase(id)

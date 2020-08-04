@@ -26,7 +26,7 @@ func TestAdapter_AddPerson(t *testing.T) {
 		restAdapter := rest.NewAdapter(usecases)
 		Convey("And a bad request, an error is returned", func() {
 			request := httptest.NewRequest("POST", "/person", nil)
-			request = logging.AddRequestLogger(request)
+			request = logging.AddRestRequestLogger(request)
 			response := httptest.NewRecorder()
 			restAdapter.AddPerson(response, request)
 			So(response.Result().StatusCode, ShouldEqual, http.StatusBadRequest)
@@ -37,7 +37,7 @@ func TestAdapter_AddPerson(t *testing.T) {
 			So(err, ShouldBeNil)
 
 			request := httptest.NewRequest("POST", "/person", bytes.NewReader(requestBodyBytes))
-			request = logging.AddRequestLogger(request)
+			request = logging.AddRestRequestLogger(request)
 			response := httptest.NewRecorder()
 
 			Convey("And an error is returned by the use case, an error is returned", func() {
