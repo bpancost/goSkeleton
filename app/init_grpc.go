@@ -3,26 +3,34 @@ package app
 import (
 	"context"
 	"fmt"
+	"net"
+
 	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	"google.golang.org/grpc"
+
 	grpcAdapter "goSkeleton/adapters/grpc"
 	"goSkeleton/internal/config"
 	"goSkeleton/internal/logging"
 	"goSkeleton/proto"
-	"google.golang.org/grpc"
-	"net"
 )
 
 func (service *PeopleServerService) initGrpc(config config.Config) {
 	service.GrpcAdapter = grpcAdapter.NewAdapter(service.Usecases)
 
-	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", 50051))
+	port := config.GetInt("grpc.port")
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		logging.Panic(err)
 	}
-	server := grpc.NewServer(grpc.UnaryInterceptor(grpcMiddleware.ChainUnaryServer(UnaryLoggingInterceptor())))
-	proto.RegisterPeopleServer(server, service.GrpcAdapter)
+	service.GrpcServer = grpc.NewServer(grpc.UnaryInterceptor(grpcMiddleware.ChainUnaryServer(UnaryLoggingInterceptor())))
+	proto.RegisterPeopleServer(service.GrpcServer, service.GrpcAdapter)
 
-	server.Serve(listener)
+	logging.Infof("starting GRPC server on port: %d", port)
+	go func() {
+		if err := service.GrpcServer.Serve(listener); err != nil {
+			logging.Error(err)
+		}
+	}()
 }
 
 func UnaryLoggingInterceptor() grpc.UnaryServerInterceptor {

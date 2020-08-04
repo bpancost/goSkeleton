@@ -2,15 +2,14 @@ package app
 
 import (
 	"context"
-	"goSkeleton/adapters/grpc"
-	"goSkeleton/adapters/repository/person"
+	"google.golang.org/grpc"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
-	"github.com/gorilla/mux"
-
+	grpcAdapter "goSkeleton/adapters/grpc"
+	"goSkeleton/adapters/repository/person"
 	"goSkeleton/adapters/rest"
 	"goSkeleton/internal/config"
 	"goSkeleton/internal/logging"
@@ -21,9 +20,9 @@ type PeopleServerService struct {
 	PeopleRepository usecases.People
 	Usecases         usecases.Usecases
 	RestAdapter      rest.Adapter
-	GrpcAdapter      grpc.Adapter
-	Router           *mux.Router
-	Server           *http.Server
+	GrpcAdapter      grpcAdapter.Adapter
+	RestServer       *http.Server
+	GrpcServer       *grpc.Server
 }
 
 func NewPeopleServerService() PeopleServerService {
@@ -61,7 +60,8 @@ func (service *PeopleServerService) Shutdown() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
 	defer cancel()
 
-	if err := service.Server.Shutdown(ctx); err != nil {
+	service.GrpcServer.GracefulStop()
+	if err := service.RestServer.Shutdown(ctx); err != nil {
 		logging.Error(err)
 	}
 	if err := service.PeopleRepository.Close(); err != nil {

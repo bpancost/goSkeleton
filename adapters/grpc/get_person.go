@@ -2,10 +2,12 @@ package grpc
 
 import (
 	"context"
-	"goSkeleton/internal/logging"
-	"goSkeleton/proto"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"goSkeleton/internal/logging"
+	"goSkeleton/proto"
 )
 
 func (adapter Adapter) GetPerson(ctx context.Context, request *proto.GetPersonRequest) (*proto.GetPersonResponse, error) {
