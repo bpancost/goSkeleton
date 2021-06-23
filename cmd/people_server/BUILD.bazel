@@ -1,5 +1,5 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
-load("@io_bazel_rules_docker//container:container.bzl", "container_push", "container_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image", "container_push")
 
 go_library(
     name = "go_default_library",
@@ -23,11 +23,11 @@ filegroup(
 container_image(
     name = "image_dev",
     base = "@go_base//image",
-    entrypoint = ["/go/bin/people_server"],
     directory = "/go/bin",
+    entrypoint = ["/go/bin/people_server"],
     files = [
-        ":people_server",
         ":dev_config",
+        ":people_server",
     ],
     ports = ["8080"],
 )
@@ -35,10 +35,8 @@ container_image(
 container_image(
     name = "image",
     base = "@go_base//image",
-    entrypoint = ["/go/bin/people_server"],
     directory = "/go/bin",
-    files = [":people_server"],
-    ports = ["8080"],
+    entrypoint = ["/go/bin/people_server"],
     env = {
         "PEOPLE_SERVER_REST_ADDRESS_IP": "0.0.0.0",
         "PEOPLE_SERVER_REST_ADDRESS_PORT": "8080",
@@ -48,4 +46,6 @@ container_image(
         "PEOPLE_SERVER_REST_ENDPOINTS": "[{\"name\": \"GetPerson\", \"method\": \"GET\", \"path\": \"/person/{id}\", \"handler\": \"GetPerson\"},{\"name\": \"AddPerson\", \"method\": \"POST\", \"path\": \"/person\", \"handler\": \"AddPerson\"}]",
         "PEOPLE_SERVER_GRPC_PORT": "50051",
     },
+    files = [":people_server"],
+    ports = ["8080"],
 )
