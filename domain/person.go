@@ -5,7 +5,7 @@ type Person struct {
 	Name string `json:"name"`
 }
 
-// shallow copy of the person struct
+// Copy shallow copy of the person struct
 func (person *Person) Copy() *Person {
 	personCopy := *person
 	return &personCopy

@@ -12,7 +12,7 @@ type ViperConfig struct {
 	config *viper.Viper
 }
 
-// Creates a new configuration loader using the Viper loader.
+// NewViperConfig Creates a new configuration loader using the Viper loader.
 // The configuration is loaded from a file named "config" in yaml format in the cmd folder matching the given project name.
 // Environment variables are loaded with precedence and must be prefixed by the project name in snake case (all caps).
 func NewViperConfig(projectName string) (Config, error) {
