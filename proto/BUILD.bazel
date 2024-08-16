@@ -1,6 +1,5 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
-load("@rules_proto//proto:defs.bzl", "proto_library")
 
 proto_library(
     name = "people_proto",
@@ -10,6 +9,7 @@ proto_library(
 
 go_proto_library(
     name = "people_go_proto",
+    compiler = "@io_bazel_rules_go//proto:go_grpc",
     compilers = ["@io_bazel_rules_go//proto:go_grpc"],
     importpath = "goSkeleton/proto",
     proto = ":people_proto",

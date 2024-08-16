@@ -1,5 +1,6 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
-load("@io_bazel_rules_docker//container:container.bzl", "container_image", "container_push")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_push", "oci_tarball", "oci_image_index")
 
 go_library(
     name = "go_default_library",
@@ -20,22 +21,32 @@ filegroup(
     srcs = ["config.yml"],
 )
 
-container_image(
-    name = "image_dev",
-    base = "@go_base//image",
-    directory = "/go/bin",
-    entrypoint = ["/go/bin/people_server"],
-    files = [
-        ":dev_config",
-        ":people_server",
-    ],
-    ports = ["8080"],
+pkg_tar(
+    name = "people_server_tar",
+    srcs = [":people_server"],
+    package_dir = "/",
 )
 
-container_image(
+pkg_tar(
+    name = "people_server_dev_tar",
+    srcs = [":people_server", ":dev_config"],
+    package_dir = "/",
+)
+
+oci_image(
+    name = "image_dev",
+    base = "@distroless_base",
+    tars = [":people_server_dev_tar"],
+    entrypoint = ["/go/bin/people_server"],
+    exposed_ports = [
+        "8080/tcp",
+    ],
+)
+
+oci_image(
     name = "image",
-    base = "@go_base//image",
-    directory = "/go/bin",
+    base = "@distroless_base",
+    tars = [":people_server_tar"],
     entrypoint = ["/go/bin/people_server"],
     env = {
         "PEOPLE_SERVER_REST_ADDRESS_IP": "0.0.0.0",
@@ -46,6 +57,7 @@ container_image(
         "PEOPLE_SERVER_REST_ENDPOINTS": "[{\"name\": \"GetPerson\", \"method\": \"GET\", \"path\": \"/person/{id}\", \"handler\": \"GetPerson\"},{\"name\": \"AddPerson\", \"method\": \"POST\", \"path\": \"/person\", \"handler\": \"AddPerson\"}]",
         "PEOPLE_SERVER_GRPC_PORT": "50051",
     },
-    files = [":people_server"],
-    ports = ["8080"],
+    exposed_ports = [
+        "8080/tcp",
+    ],
 )
