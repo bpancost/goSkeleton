@@ -16,7 +16,7 @@ load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_depe
 
 go_rules_dependencies()
 
-go_register_toolchains(version = "1.23.0")
+go_register_toolchains(version = "1.20.14")
 
 ### Protobuf
 
@@ -65,22 +65,20 @@ gazelle_dependencies()
 
 http_archive(
     name = "rules_oci",
-    sha256 = "647f4c6fd092dc7a86a7f79892d4b1b7f1de288bdb4829ca38f74fd430fcd2fe",
-    strip_prefix = "rules_oci-1.7.6",
-    url = "https://github.com/bazel-contrib/rules_oci/releases/download/v1.7.6/rules_oci-v1.7.6.tar.gz",
+    sha256 = "f70f07f9d0d6c275d7ec7d3c7f236d9b552ba3205e8f37df9c1125031cf967cc",
+    strip_prefix = "rules_oci-2.0.0-beta1",
+    url = "https://github.com/bazel-contrib/rules_oci/releases/download/v2.0.0-beta1/rules_oci-v2.0.0-beta1.tar.gz",
 )
 
 load("@rules_oci//oci:dependencies.bzl", "rules_oci_dependencies")
 
 rules_oci_dependencies()
 
-load("@rules_oci//oci:repositories.bzl", "LATEST_CRANE_VERSION", "oci_register_toolchains")
+load("@rules_oci//oci:repositories.bzl", "oci_register_toolchains")
 
-oci_register_toolchains(
-    name = "oci",
-    crane_version = LATEST_CRANE_VERSION,
-)
+oci_register_toolchains(name = "oci")
 
+# You can pull your base images using oci_pull like this:
 load("@rules_oci//oci:pull.bzl", "oci_pull")
 
 oci_pull(
@@ -88,8 +86,7 @@ oci_pull(
     digest = "sha256:ccaef5ee2f1850270d453fdf700a5392534f8d1a8ca2acda391fbb6a06b81c86",
     image = "gcr.io/distroless/base",
     platforms = [
-        "linux/amd64",
-        "linux/arm64",
+        "linux/amd64"
     ],
 )
 
@@ -1619,8 +1616,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_exp",
     importpath = "golang.org/x/exp",
-    sum = "h1:GoHiUyI/Tp2nVkLI2mCxVkOjsbSXD66ic0XW0js0R9g=",
-    version = "v0.0.0-20230905200255-921286631fa9",
+    sum = "h1:ELnwvuAXPNtPk1TJRuGkI9fDTwym6AYBu0qzT8AcHdI=",
+    version = "v0.0.0-20240808152545-0cdaa3abc0fa",
 )
 
 go_repository(
@@ -1647,8 +1644,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_mod",
     importpath = "golang.org/x/mod",
-    sum = "h1:rmsUpXtvNzj340zd98LZ4KntptpfRHwpFOHG188oHXc=",
-    version = "v0.12.0",
+    sum = "h1:KENHtAZL2y3NLMYZeHY9DW8HW8V+kQyJsY/V9JlKvCs=",
+    version = "v0.9.0",
 )
 
 go_repository(
@@ -1696,8 +1693,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_tools",
     importpath = "golang.org/x/tools",
-    sum = "h1:Iey4qkscZuv0VvIt8E0neZjtPVQFSc870HQ448QgEmQ=",
-    version = "v0.13.0",
+    sum = "h1:W4OVu8VVOaIO0yzWMNdepAulS7YfoS3Zabrm8DOXXU4=",
+    version = "v0.7.0",
 )
 
 go_repository(
