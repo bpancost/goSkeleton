@@ -694,7 +694,7 @@
     "@@rules_oci~//oci:extensions.bzl%oci": {
       "general": {
         "bzlTransitiveDigest": "pooVjvj1WdakYSEs4U8ojpk4Hz9O1fRMFqQETIGonKU=",
-        "usagesDigest": "6I7v0LTEtWR9PSJa8Q12st1CbAG6DRlxuQCT0Aci6yg=",
+        "usagesDigest": "Pif6TVtCKv4T6e/Aakebe+p8U8iCh3LDLWGvUO1vPVk=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -717,6 +717,19 @@
             "attributes": {
               "platform": "darwin_amd64",
               "version": "1.7"
+            }
+          },
+          "go_base_linux_arm64": {
+            "bzlFile": "@@rules_oci~//oci/private:pull.bzl",
+            "ruleClassName": "oci_pull",
+            "attributes": {
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "golang",
+              "identifier": "sha256:5b9db5ac549a85ba6c504dfa12ef6ea08bbd5a6cc4f60cc6268fd610679a219c",
+              "platform": "linux/arm64",
+              "target_name": "go_base_linux_arm64",
+              "bazel_tags": []
             }
           },
           "copy_to_directory_freebsd_amd64": {
@@ -935,6 +948,23 @@
               "platform": "linux_amd64"
             }
           },
+          "go_base": {
+            "bzlFile": "@@rules_oci~//oci/private:pull.bzl",
+            "ruleClassName": "oci_alias",
+            "attributes": {
+              "target_name": "go_base",
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "golang",
+              "identifier": "sha256:5b9db5ac549a85ba6c504dfa12ef6ea08bbd5a6cc4f60cc6268fd610679a219c",
+              "platforms": {
+                "@@platforms//cpu:x86_64": "@go_base_linux_amd64",
+                "@@platforms//cpu:arm64": "@go_base_linux_arm64"
+              },
+              "bzlmod_repository": "go_base",
+              "reproducible": true
+            }
+          },
           "oci_regctl_darwin_arm64": {
             "bzlFile": "@@rules_oci~//oci:repositories.bzl",
             "ruleClassName": "regctl_repositories",
@@ -1123,6 +1153,19 @@
               }
             }
           },
+          "go_base_linux_amd64": {
+            "bzlFile": "@@rules_oci~//oci/private:pull.bzl",
+            "ruleClassName": "oci_pull",
+            "attributes": {
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "golang",
+              "identifier": "sha256:5b9db5ac549a85ba6c504dfa12ef6ea08bbd5a6cc4f60cc6268fd610679a219c",
+              "platform": "linux/amd64",
+              "target_name": "go_base_linux_amd64",
+              "bazel_tags": []
+            }
+          },
           "coreutils_windows_amd64": {
             "bzlFile": "@@aspect_bazel_lib~//lib/private:coreutils_toolchain.bzl",
             "ruleClassName": "coreutils_platform_repo",
@@ -1135,7 +1178,10 @@
         "moduleExtensionMetadata": {
           "explicitRootModuleDirectDeps": [
             "distroless_base",
-            "distroless_base_linux_amd64"
+            "distroless_base_linux_amd64",
+            "go_base",
+            "go_base_linux_amd64",
+            "go_base_linux_arm64"
           ],
           "explicitRootModuleDirectDevDeps": [],
           "useAllRepos": "NO",

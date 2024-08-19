@@ -55,7 +55,7 @@ oci_image(
 
 oci_image(
     name = "image",
-    base = "@distroless_base",
+    base = "@go_base",
     architecture = "amd64",
     os = "linux",
     tars = [":people_server_tar"],

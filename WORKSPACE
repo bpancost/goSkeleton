@@ -90,6 +90,22 @@ oci_pull(
     ],
 )
 
+oci_pull(
+    name = "go_base",
+    digest = "sha256:5b9db5ac549a85ba6c504dfa12ef6ea08bbd5a6cc4f60cc6268fd610679a219c",
+    image = "index.docker.io/golang",
+    platforms = [
+        "linux/amd64"
+    ],
+)
+
+ #container_pull(
+ #    name = "go_base",
+ #    digest = "sha256:5b9db5ac549a85ba6c504dfa12ef6ea08bbd5a6cc4f60cc6268fd610679a219c",
+ #    registry = "index.docker.io",
+ #    repository = "golang",
+ #)
+
 ### Pkg Rules
 
 http_archive(
