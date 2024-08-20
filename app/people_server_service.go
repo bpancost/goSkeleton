@@ -36,7 +36,7 @@ func (service *PeopleServerService) Start() {
 	}
 	logging.GetLoggerWithBaseFields("people_server", hostname)
 
-	conf, err := config.NewViperConfig("people_server")
+	conf, err := config.NewConfig("people_server")
 	if err != nil {
 		logging.Warn(err)
 	}
