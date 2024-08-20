@@ -2,76 +2,97 @@ package config
 
 import (
 	"encoding/json"
-	"github.com/spf13/viper"
+	"github.com/knadh/koanf/parsers/yaml"
+	"github.com/knadh/koanf/providers/env"
+	"github.com/knadh/koanf/providers/file"
+	koanf "github.com/knadh/koanf/v2"
+	"github.com/pkg/errors"
 	"regexp"
 	"strings"
 	"time"
 )
 
-type ViperConfig struct {
-	config *viper.Viper
+type ConfigObj struct {
+	config *koanf.Koanf
 }
 
-// NewViperConfig Creates a new configuration loader using the Viper loader.
+// NewConfig Creates a new configuration loader using the Viper loader.
 // The configuration is loaded from a file named "config" in yaml format in the cmd folder matching the given project name.
 // Environment variables are loaded with precedence and must be prefixed by the project name in snake case (all caps).
-func NewViperConfig(projectName string) (Config, error) {
-	config := viper.New()
-	config.SetConfigName("config")
-	config.SetConfigType("yaml")
-	config.AddConfigPath("./cmd/" + projectName) // running locally
-	config.AddConfigPath(".")                    // running locally
-	config.AddConfigPath("./bin/")               // running the dev container image
-	config.SetEnvPrefix(toSnakeCase(projectName))
-	config.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-	config.AutomaticEnv()
-	err := config.ReadInConfig()
-	return &ViperConfig{
-		config: config,
-	}, err
+func NewConfig(projectName string) (Config, error) {
+	k := koanf.New(".")
+	err := k.Load(file.Provider("config.yaml"), yaml.Parser()) // Running locally
+	errCount := 0
+	if err != nil {
+		errCount++
+	}
+	err = k.Load(file.Provider("cmd/"+projectName+"/config.yaml"), yaml.Parser()) // Running locally
+	if err != nil {
+		errCount++
+	}
+	err = k.Load(file.Provider("bin/"+projectName+"/config.yaml"), yaml.Parser()) // Running the dev container image
+	if err != nil {
+		errCount++
+	}
+
+	err = k.Load(env.Provider(toSnakeCase(projectName)+"_", ".", func(s string) string {
+		return strings.Replace(strings.ToLower(
+			strings.TrimPrefix(s, toSnakeCase(projectName)+"_")), "_", ".", -1)
+	}), nil)
+	if err != nil {
+		errCount++
+	}
+	var outError error
+	if errCount == 4 {
+		outError = errors.New("No configuration was loaded")
+	}
+
+	return &ConfigObj{
+		config: k,
+	}, outError
 }
 
-func (c *ViperConfig) GetBoolean(key string) bool {
-	return c.config.GetBool(key)
+func (c *ConfigObj) GetBoolean(key string) bool {
+	return c.config.Bool(key)
 }
 
-func (c *ViperConfig) GetString(key string) string {
-	return c.config.GetString(key)
+func (c *ConfigObj) GetString(key string) string {
+	return c.config.String(key)
 }
 
-func (c *ViperConfig) GetInt(key string) int {
-	return c.config.GetInt(key)
+func (c *ConfigObj) GetInt(key string) int {
+	return c.config.Int(key)
 }
 
-func (c *ViperConfig) GetInt32(key string) int32 {
-	return c.config.GetInt32(key)
+func (c *ConfigObj) GetInt32(key string) int32 {
+	return int32(c.config.Int(key))
 }
 
-func (c *ViperConfig) GetInt64(key string) int64 {
-	return c.config.GetInt64(key)
+func (c *ConfigObj) GetInt64(key string) int64 {
+	return c.config.Int64(key)
 }
 
-func (c *ViperConfig) GetFloat64(key string) float64 {
-	return c.config.GetFloat64(key)
+func (c *ConfigObj) GetFloat64(key string) float64 {
+	return c.config.Float64(key)
 }
 
-func (c *ViperConfig) GetTime(key string) time.Time {
-	return c.config.GetTime(key)
+func (c *ConfigObj) GetTime(key string) time.Time {
+	return c.config.Time(key, time.RFC3339)
 }
 
-func (c *ViperConfig) GetDuration(key string) time.Duration {
-	return c.config.GetDuration(key)
+func (c *ConfigObj) GetDuration(key string) time.Duration {
+	return c.config.Duration(key)
 }
 
-func (c *ViperConfig) GetStringMapString(key string) map[string]string {
-	return c.config.GetStringMapString(key)
+func (c *ConfigObj) GetStringMapString(key string) map[string]string {
+	return c.config.StringMap(key)
 }
 
-func (c *ViperConfig) Get(key string) interface{} {
+func (c *ConfigObj) Get(key string) interface{} {
 	return c.config.Get(key)
 }
 
-func (c *ViperConfig) GetListOfMaps(key string) ([]map[string]string, error) {
+func (c *ConfigObj) GetListOfMaps(key string) ([]map[string]string, error) {
 	finalValues := make([]map[string]string, 0)
 	rawValue := c.config.Get(key)
 	if listValues, ok := rawValue.([]interface{}); ok {
