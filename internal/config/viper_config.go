@@ -5,14 +5,14 @@ import (
 	"github.com/knadh/koanf/parsers/yaml"
 	"github.com/knadh/koanf/providers/env"
 	"github.com/knadh/koanf/providers/file"
-	koanf "github.com/knadh/koanf/v2"
+	"github.com/knadh/koanf/v2"
 	"github.com/pkg/errors"
 	"regexp"
 	"strings"
 	"time"
 )
 
-type ConfigObj struct {
+type Configuration struct {
 	config *koanf.Koanf
 }
 
@@ -47,52 +47,52 @@ func NewConfig(projectName string) (Config, error) {
 		outError = errors.New("No configuration was loaded")
 	}
 
-	return &ConfigObj{
+	return &Configuration{
 		config: k,
 	}, outError
 }
 
-func (c *ConfigObj) GetBoolean(key string) bool {
+func (c *Configuration) GetBoolean(key string) bool {
 	return c.config.Bool(key)
 }
 
-func (c *ConfigObj) GetString(key string) string {
+func (c *Configuration) GetString(key string) string {
 	return c.config.String(key)
 }
 
-func (c *ConfigObj) GetInt(key string) int {
+func (c *Configuration) GetInt(key string) int {
 	return c.config.Int(key)
 }
 
-func (c *ConfigObj) GetInt32(key string) int32 {
+func (c *Configuration) GetInt32(key string) int32 {
 	return int32(c.config.Int(key))
 }
 
-func (c *ConfigObj) GetInt64(key string) int64 {
+func (c *Configuration) GetInt64(key string) int64 {
 	return c.config.Int64(key)
 }
 
-func (c *ConfigObj) GetFloat64(key string) float64 {
+func (c *Configuration) GetFloat64(key string) float64 {
 	return c.config.Float64(key)
 }
 
-func (c *ConfigObj) GetTime(key string) time.Time {
+func (c *Configuration) GetTime(key string) time.Time {
 	return c.config.Time(key, time.RFC3339)
 }
 
-func (c *ConfigObj) GetDuration(key string) time.Duration {
+func (c *Configuration) GetDuration(key string) time.Duration {
 	return c.config.Duration(key)
 }
 
-func (c *ConfigObj) GetStringMapString(key string) map[string]string {
+func (c *Configuration) GetStringMapString(key string) map[string]string {
 	return c.config.StringMap(key)
 }
 
-func (c *ConfigObj) Get(key string) interface{} {
+func (c *Configuration) Get(key string) interface{} {
 	return c.config.Get(key)
 }
 
-func (c *ConfigObj) GetListOfMaps(key string) ([]map[string]string, error) {
+func (c *Configuration) GetListOfMaps(key string) ([]map[string]string, error) {
 	finalValues := make([]map[string]string, 0)
 	rawValue := c.config.Get(key)
 	if listValues, ok := rawValue.([]interface{}); ok {
