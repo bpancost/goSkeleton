@@ -1,4 +1,7 @@
 build --enable_bzlmod
 query --enable_bzlmod
-build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
-run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
+
+# Use native platform for tests and builds by default
+# For container images, explicitly set the platform to linux_amd64
+build:linux --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
+run:linux --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64

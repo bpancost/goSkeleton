@@ -43,6 +43,7 @@ oci_image(
     exposed_ports = [
         "8080/tcp",
     ],
+    tags = ["manual"],
     tars = [":people_server_dev_tar"],
 )
 
@@ -62,5 +63,6 @@ oci_image(
     exposed_ports = [
         "8080/tcp",
     ],
+    tags = ["manual"],
     tars = [":people_server_tar"],
 )
